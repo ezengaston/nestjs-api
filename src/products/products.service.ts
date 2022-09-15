@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
 import { Product } from './product.model';
@@ -16,5 +16,13 @@ export class ProductsService {
 
   getAllProducts(): Product[] {
     return [...this.products];
+  }
+
+  getProduct(id: string) {
+    const product = this.products.filter((item) => item.id === id);
+    if (product.length === 0) {
+      throw new NotFoundException('Could not find product');
+    }
+    return { ...product };
   }
 }
