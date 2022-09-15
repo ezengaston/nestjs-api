@@ -19,10 +19,36 @@ export class ProductsService {
   }
 
   getProduct(id: string) {
-    const product = this.products.filter((item) => item.id === id);
-    if (product.length === 0) {
+    const product = this.findProduct(id)[0];
+
+    return { ...product };
+  }
+
+  updateProduct(id: string, title: string, description: string, price: number) {
+    const [product, index] = this.findProduct(id);
+    const updatedProduct = { ...product };
+
+    if (title) {
+      updatedProduct.title = title;
+    }
+
+    if (description) {
+      updatedProduct.description = description;
+    }
+
+    if (price) {
+      updatedProduct.price = price;
+    }
+
+    this.products[index] = updatedProduct;
+  }
+
+  private findProduct(id: string): [Product, number] {
+    const productIndex = this.products.findIndex((item) => item.id === id);
+    const product = this.products[productIndex];
+    if (!product) {
       throw new NotFoundException('Could not find product');
     }
-    return { ...product };
+    return [product, productIndex];
   }
 }
