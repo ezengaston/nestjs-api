@@ -23,8 +23,14 @@ export class ProductsService {
     return res.id;
   }
 
-  getAllProducts(): Product[] {
-    return [...this.products];
+  async getAllProducts() {
+    const res = await this.productModel.find().exec();
+    return res.map((product) => ({
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      price: product.price,
+    }));
   }
 
   getProduct(id: string) {
