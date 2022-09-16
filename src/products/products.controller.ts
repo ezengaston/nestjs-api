@@ -15,12 +15,12 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  addProduct(
+  async addProduct(
     @Body('title') prodTitle: string,
     @Body('description') prodDesc: string,
     @Body('price') prodPrice: number,
-  ): { id: number } {
-    const id = this.productsService.insertProduct(
+  ) {
+    const id = await this.productsService.insertProduct(
       prodTitle,
       prodDesc,
       prodPrice,
