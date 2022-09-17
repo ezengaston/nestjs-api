@@ -66,7 +66,7 @@ export class ProductsService {
   }
 
   async deleteProduct(id: string) {
-    await this.productModel.deleteOne({ id: id }).exec();
+    await this.productModel.deleteOne({ _id: id }).exec();
   }
 
   private async findProduct(id: string): Promise<Product> {
