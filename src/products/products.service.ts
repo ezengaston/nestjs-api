@@ -7,8 +7,6 @@ import { Product } from './product.model';
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = [];
-
   constructor(
     @InjectModel('Product') private readonly productModel: Model<Product>,
   ) {}
@@ -66,7 +64,10 @@ export class ProductsService {
   }
 
   async deleteProduct(id: string) {
-    await this.productModel.deleteOne({ _id: id }).exec();
+    const res = await this.productModel.deleteOne({ _id: id }).exec();
+    if (res.deletedCount === 0) {
+      throw new NotFoundException('Could not find a product');
+    }
   }
 
   private async findProduct(id: string): Promise<Product> {
@@ -74,10 +75,10 @@ export class ProductsService {
     try {
       res = await this.productModel.findById(id).exec();
       if (!res) {
-        throw new NotFoundException('Could not find product');
+        throw new NotFoundException('Could not find a product');
       }
     } catch (e) {
-      throw new NotFoundException('Could not find product');
+      throw new NotFoundException('Could not find a product');
     }
 
     return res;
