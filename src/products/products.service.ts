@@ -33,41 +33,41 @@ export class ProductsService {
     }));
   }
 
-  getProduct(id: string) {
-    const product = this.findProduct(id)[0];
+  async getProduct(id: string) {
+    const res = await this.findProduct(id);
 
-    return { ...product };
+    return res;
   }
 
   updateProduct(id: string, title: string, description: string, price: number) {
-    const [product, index] = this.findProduct(id);
-    const updatedProduct = { ...product };
-
-    if (title) {
-      updatedProduct.title = title;
-    }
-
-    if (description) {
-      updatedProduct.description = description;
-    }
-
-    if (price) {
-      updatedProduct.price = price;
-    }
-
-    this.products[index] = updatedProduct;
+    // const [product, index] = this.findProduct(id);
+    // const updatedProduct = { ...product };
+    // if (title) {
+    //   updatedProduct.title = title;
+    // }
+    // if (description) {
+    //   updatedProduct.description = description;
+    // }
+    // if (price) {
+    //   updatedProduct.price = price;
+    // }
+    // this.products[index] = updatedProduct;
   }
 
   deleteProduct(id: string) {
     this.products = this.products.filter((item) => item.id !== id);
   }
 
-  private findProduct(id: string): [Product, number] {
-    const productIndex = this.products.findIndex((item) => item.id === id);
-    const product = this.products[productIndex];
-    if (!product) {
+  private async findProduct(id: string): Promise<Product> {
+    const res = await this.productModel.findById(id);
+    if (!res) {
       throw new NotFoundException('Could not find product');
     }
-    return [product, productIndex];
+    return {
+      id: res.id,
+      title: res.title,
+      description: res.description,
+      price: res.price,
+    };
   }
 }
