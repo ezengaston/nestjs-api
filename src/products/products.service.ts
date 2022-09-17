@@ -39,9 +39,14 @@ export class ProductsService {
     return res;
   }
 
-  updateProduct(id: string, title: string, description: string, price: number) {
-    // const [product, index] = this.findProduct(id);
-    // const updatedProduct = { ...product };
+  async updateProduct(
+    id: string,
+    title: string,
+    description: string,
+    price: number,
+  ) {
+    // const res = await this.findProduct(id);
+    // const updatedProduct = { ...res };
     // if (title) {
     //   updatedProduct.title = title;
     // }
@@ -51,7 +56,10 @@ export class ProductsService {
     // if (price) {
     //   updatedProduct.price = price;
     // }
-    // this.products[index] = updatedProduct;
+    // const update = await this.productModel.findOneAndUpdate(
+    //   { _id: id },
+    //   updatedProduct,
+    // );
   }
 
   deleteProduct(id: string) {
@@ -59,10 +67,13 @@ export class ProductsService {
   }
 
   private async findProduct(id: string): Promise<Product> {
-    const res = await this.productModel.findById(id);
-    if (!res) {
+    let res;
+    try {
+      res = await this.productModel.findById(id);
+    } catch (e) {
       throw new NotFoundException('Could not find product');
     }
+
     return {
       id: res.id,
       title: res.title,
